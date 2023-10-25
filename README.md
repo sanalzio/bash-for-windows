@@ -3,7 +3,7 @@ It allows Windows users to use a bash-style cmd.
 
 ![Python](https://img.shields.io/badge/python3-%2314354C.svg?style=for-the-badge&logo=python&logoColor=ffd342&color=3673a5)
 
-![logo](bfw.jpg)
+![logo](bfw.svg)
 
 # required libraries
 - os
