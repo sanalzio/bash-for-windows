@@ -1,5 +1,5 @@
 # Bash For Windows
-It allows Windows users to use a bash-style cmd.
+It allows Windows users to use a bash-style cmd. **Writed with [ugurcomptech](https://github.com/ugurcomptech/)**
 
 ![Python](https://img.shields.io/badge/python3-%2314354C.svg?style=for-the-badge&logo=python&logoColor=ffd342&color=3673a5)
 
