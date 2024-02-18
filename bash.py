@@ -10,12 +10,16 @@ from prompt_toolkit import ANSI
 import datetime
 
 
-
 init(autoreset=True)
 
 """history = []"""
 current_directory = os.getcwd()
-current_folder = current_directory.split("\\")[len(current_directory.split("\\"))-1]
+current_folder = current_directory.split("\\")[len(current_directory.split("\\"))-1] if current_directory.split("\\")[len(current_directory.split("\\"))-1]!="" else current_directory[:-2]
+
+
+
+def inp_pref():
+    return f'{Fore.LIGHTGREEN_EX}{getuser()}@{current_folder}{Fore.RESET}:{Fore.LIGHTBLUE_EX}~{Fore.RESET}$ '
 
 
 
@@ -149,10 +153,10 @@ def show_help():
 while True:
     try:
         """user_input = prompt(
-            ANSI(f'{Fore.LIGHTGREEN_EX}{gethostname()}@{getuser()}{Fore.RESET}:{Fore.LIGHTBLUE_EX}~\{current_folder}{Fore.RESET}$ '),
+            ANSI(inp_pref()),
             completer=command_completer
         )"""
-        user_input=input(f'{Fore.LIGHTGREEN_EX}{gethostname()}@{getuser()}{Fore.RESET}:{Fore.LIGHTBLUE_EX}~\{current_folder}{Fore.RESET}$ ')
+        user_input=input(inp_pref())
 
         if user_input == "":
             continue
@@ -166,16 +170,27 @@ while True:
         el"""
         if user_input.startswith("cd "):
             directory = user_input[3:]
+            if directory.startswith("/"):
+                directory = "C:"+user_input[3:]
             try:
-                os.chdir(directory)
+                os.chdir(directory.replace("~", os.path.expanduser('~user')).replace("\\","/"))
                 current_directory = os.getcwd()
-                current_folder = current_directory.split("\\")[len(current_directory.split("\\"))-1]
-            except FileNotFoundError:
-                print(f"Directory not found: {directory}")
+                current_folder = current_directory.split("\\")[len(current_directory.split("\\"))-1] if current_directory.split("\\")[len(current_directory.split("\\"))-1]!="" else current_directory[:-2]
+            except Exception as err:
+                print(err)
+        elif user_input.lower() == "cd..":
+            try:
+                os.chdir("..")
+                current_directory = os.getcwd()
+                current_folder = current_directory.split("\\")[len(current_directory.split("\\"))-1] if current_directory.split("\\")[len(current_directory.split("\\"))-1]!="" else current_directory[:-2]
+            except Exception as err:
+                print(err)
         elif user_input.lower() == "ls":
             list_files()
         elif user_input.lower() == "exit":
             exit(0)
+        elif user_input.lower() == "clear":
+            os.system("cls")
         elif user_input.startswith("move "):
             _, src, dest = user_input.split()
             move_file(src, dest)
@@ -188,14 +203,14 @@ while True:
         elif user_input.startswith("create "):
             _, file = user_input.split()
             create_file(file)
-        elif user_input.startswith("vi"):
+        elif user_input == "vi":
             con=""
             print(f"press {Fore.YELLOW}Ctrl+C{Fore.RESET} for confirm")
             try:
                 while True:
                     con += input(Fore.LIGHTCYAN_EX)+"\n"
             except KeyboardInterrupt:
-                file=input(f"{Fore.RESET}{Fore.YELLOW}What is the new file's name?{Fore.RESET} > ")
+                file=input(f"\n{Fore.RESET}{Fore.YELLOW}What is the new file's name?{Fore.RESET} > ")
                 with open(file, 'w') as f:
                     f.write(con)
                     print(f"{Fore.YELLOW}Created{Fore.RESET} {file}")
